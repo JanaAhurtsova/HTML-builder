@@ -8,9 +8,13 @@ async function copyFolder(src, dest) {
     if(err) throw err;
   });
 
-  await fs.rm(dest, { recursive: true, force: true }, (err) => { if(err) throw err});
+  await fs.rm(dest, { recursive: true, force: true }, (err) => {
+    if(err) throw err;
+  });
 
-  await fs.mkdir(dest, { recursive: true }, (err) => { if(err) throw err});
+  await fs.mkdir(dest, { recursive: true }, (err) => {
+    if(err) throw err;
+  });
 
   for (let file of files) {
     const srcFilePath = path.resolve(src, file.name);
@@ -23,4 +27,5 @@ async function copyFolder(src, dest) {
     }
   }
 }
+
 copyFolder(src, dest)
