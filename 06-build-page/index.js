@@ -50,31 +50,31 @@ async function createStyles() {
   }
 }
 
-async function assetsCopy(assets, destAssets) {
-  const files = await fsPromises.readdir(assets, { withFileTypes: true }, (err) => {
+async function copyFolder(src, dest) {
+  const files = await fsPromises.readdir(src, { withFileTypes: true }, (err) => {
     if(err) throw err;
   });
 
-  await fsPromises.rm(destAssets, { recursive: true, force: true }, (err) => {
+  await fsPromises.rm(dest, { recursive: true, force: true }, (err) => {
     if(err) throw err;
   });
 
-  await fsPromises.mkdir(destAssets, { recursive: true }, (err) => {
+  await fsPromises.mkdir(dest, { recursive: true }, (err) => {
     if(err) throw err;
   });
 
   for (let file of files) {
-    const assetsFilePath = path.resolve(assets, file.name);
-    const destAssetsFilePath = path.resolve(destAssets, file.name);
+    const srcFilePath = path.resolve(src, file.name);
+    const destFilePath = path.resolve(dest, file.name);
 
     if (file.isDirectory()) {
-      await assetsCopy(assetsFilePath, destAssetsFilePath);
+      await copyFolder(srcFilePath, destFilePath);
     } else {
-      await fsPromises.copyFile(assetsFilePath, destAssetsFilePath);
+      await fsPromises.copyFile(srcFilePath, destFilePath);
     }
   }
 }
 
 createDistHtml();
 createStyles();
-assetsCopy(assets, destAssets);
+copyFolder(assets, destAssets);
